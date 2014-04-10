@@ -430,6 +430,10 @@
     
     [cell hideIfOtherMonthDate];
     
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureDayCellForDate:)]) {
+        [self.delegate calendarView:self configureDayCellForDate:cell];
+    }
+    
     return cell;
 }
 

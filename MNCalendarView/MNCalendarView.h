@@ -7,6 +7,7 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "MNCalendarViewDayCell.h"
 
 #define MN_MINUTE 60.f
 #define MN_HOUR   MN_MINUTE * 60.f
@@ -70,6 +71,7 @@
 
 @optional
 
+- (BOOL)calendarView:(MNCalendarView *)calendarView configureDayCellForDate:(MNCalendarViewDayCell *)cell;
 - (BOOL)calendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date;
 - (void)calendarView:(MNCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
