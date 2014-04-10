@@ -14,6 +14,8 @@
 #import "MNFastDateEnumeration.h"
 #import "NSDate+MNAdditions.h"
 
+
+
 @interface MNCalendarView() <UICollectionViewDataSource, UICollectionViewDelegate>
 
 @property(nonatomic,strong,readwrite) UICollectionView *collectionView;
@@ -25,17 +27,13 @@
 
 @property(nonatomic,strong,readwrite) NSDateFormatter *monthFormatter;
 
-- (NSDate *)firstVisibleDateOfMonth:(NSDate *)date;
-- (NSDate *)lastVisibleDateOfMonth:(NSDate *)date;
-
-- (BOOL)dateEnabled:(NSDate *)date;
-- (BOOL)canSelectItemAtIndexPath:(NSIndexPath *)indexPath;
-
-- (void)applyConstraints;
-
 @end
 
+
+
 @implementation MNCalendarView
+
+
 
 - (id)initWithFrame:(CGRect)frame
 {
@@ -81,10 +79,14 @@
     return self;
 }
 
+
+
 - (void)setHeaderTitleColor:(UIColor *)headerTitleColor
 {
     [self setHeaderTitleColor:headerTitleColor reloadData:YES];
 }
+
+
 
 - (void)setHeaderTitleColor:(UIColor *)headerTitleColor reloadData:(BOOL)reloadData
 {
@@ -93,6 +95,8 @@
         [self reloadData];
     }
 }
+
+
 
 - (UICollectionView *)collectionView
 {
@@ -108,21 +112,39 @@
         _collectionView.showsVerticalScrollIndicator = NO;
         _collectionView.dataSource = self;
         _collectionView.delegate = self;
-        //      [(UICollectionViewFlowLayout *)_collectionView.collectionViewLayout setScrollDirection:UICollectionViewScrollDirectionHorizontal];
-        //        [self.collectionView setPagingEnabled:YES];
         
-        [_collectionView registerClass:self.dayCellClass
-            forCellWithReuseIdentifier:MNCalendarViewDayCellIdentifier];
-        
-        [_collectionView registerClass:self.weekdayCellClass
-            forCellWithReuseIdentifier:MNCalendarViewWeekdayCellIdentifier];
-        
-        [_collectionView registerClass:self.headerViewClass
-            forSupplementaryViewOfKind:UICollectionElementKindSectionHeader
-                   withReuseIdentifier:MNCalendarHeaderViewIdentifier];
+        [self registerUICollectionViewClasses];
     }
     return _collectionView;
 }
+
+
+
+#pragma mark - Properties
+
+
+
+- (void)setHeaderViewClass:(Class)headerViewClass
+{
+    _headerViewClass = headerViewClass;
+    
+    [self registerUICollectionViewClasses];
+}
+
+- (void)setWeekdayCellClass:(Class)weekdayCellClass
+{
+    _weekdayCellClass = weekdayCellClass;
+    
+    [self registerUICollectionViewClasses];
+}
+
+- (void)setDayCellClass:(Class)dayCellClass
+{
+    _dayCellClass = dayCellClass;
+    
+    [self registerUICollectionViewClasses];
+}
+
 
 - (void)setPagingEnableSetting:(BOOL)pagingEnableSetting
 {
@@ -130,10 +152,14 @@
     [(MNCalendarViewLayout *)self.collectionView.collectionViewLayout setPagingEnable:pagingEnableSetting];
 }
 
+
+
 - (void)setSeparatorColor:(UIColor *)separatorColor
 {
     _separatorColor = separatorColor;
 }
+
+
 
 - (void)setCalendar:(NSCalendar *)calendar
 {
@@ -144,16 +170,22 @@
     [self.monthFormatter setDateFormat:@"MMMM yyyy"];
 }
 
+
+
 - (void)setSelectedDate:(NSDate *)selectedDate
 {
     _selectedDate = [selectedDate mn_beginningOfDay:self.calendar];
 }
+
+
 
 - (void)setSelectedDateRange:(NSArray *)selectedDateRange
 {
     _selectedDateRange = selectedDateRange;
     [self.collectionView reloadData];
 }
+
+
 
 - (void)reloadData
 {
@@ -176,6 +208,23 @@
     [self.collectionView reloadData];
 }
 
+
+
+#pragma mark - Private
+
+
+
+- (void)registerUICollectionViewClasses
+{
+    [_collectionView registerClass:self.dayCellClass forCellWithReuseIdentifier:MNCalendarViewDayCellIdentifier];
+    
+    [_collectionView registerClass:self.weekdayCellClass forCellWithReuseIdentifier:MNCalendarViewWeekdayCellIdentifier];
+    
+    [_collectionView registerClass:self.headerViewClass forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:MNCalendarHeaderViewIdentifier];
+}
+
+
+
 - (NSDate *)firstVisibleDateOfMonth:(NSDate *)date
 {
     date = [date mn_firstDateOfMonth:self.calendar];
@@ -187,6 +236,8 @@
     return
     [[date mn_dateWithDay:-((components.weekday - 1) % self.daysInWeek) calendar:self.calendar] dateByAddingTimeInterval:MN_DAY];
 }
+
+
 
 - (NSDate *)lastVisibleDateOfMonth:(NSDate *)date
 {
@@ -200,6 +251,8 @@
     [date mn_dateWithDay:components.day + (self.daysInWeek - 1) - ((components.weekday - 1) % self.daysInWeek)
                 calendar:self.calendar];
 }
+
+
 
 - (void)applyConstraints
 {
@@ -218,6 +271,8 @@
      ];
 }
 
+
+
 - (BOOL)dateEnabled:(NSDate *)date
 {
     if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:shouldSelectDate:)]) {
@@ -225,6 +280,8 @@
     }
     return YES;
 }
+
+
 
 - (BOOL)canSelectItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -244,6 +301,8 @@
     
     return enabled;
 }
+
+
 
 - (NSIndexPath *)indexPathForDate:(NSDate *)date
 {
@@ -269,9 +328,13 @@
     return [NSIndexPath indexPathForItem:row inSection:section];
 }
 
+
+
 - (void)scrollToMonthForDate:(NSDate *)date {
     [self scrollToMonthForDate:date animated:YES];
 }
+
+
 
 // positions the month header at the top of the view
 - (void)scrollToMonthForDate:(NSDate *)date animated:(BOOL)animated {
@@ -287,6 +350,8 @@
     [self.collectionView setContentOffset:CGPointMake(self.collectionView.contentOffset.x, offsetY - self.collectionView.contentInset.top) animated:animated];
 }
 
+
+
 - (void)scrollToDate:(NSDate *)date animated:(BOOL)animated
 {
     NSIndexPath *indexPath = [self indexPathForDate:date];
@@ -298,10 +363,14 @@
                                         animated:animated];
 }
 
+
+
 - (void)scrollToDate:(NSDate *)date
 {
     [self scrollToDate:date animated:YES];
 }
+
+
 
 - (void)selectDate:(NSDate *)date animated:(BOOL)animated
 {
@@ -318,9 +387,13 @@
 
 #pragma mark - UICollectionViewDataSource
 
+
+
 - (NSInteger)numberOfSectionsInCollectionView:(UICollectionView *)collectionView {
     return self.monthDates.count;
 }
+
+
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView
            viewForSupplementaryElementOfKind:(NSString *)kind
@@ -337,6 +410,8 @@
     return headerView;
 }
 
+
+
 - (NSInteger)collectionView:(UICollectionView *)collectionView numberOfItemsInSection:(NSInteger)section
 {
     NSDate *monthDate = self.monthDates[section];
@@ -348,6 +423,8 @@
     
     return self.daysInWeek + components.day + 1;
 }
+
+
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath
 {
@@ -390,10 +467,13 @@
     [cell setEnabled:[self dateEnabled:date]];
     
     
-    if (self.selectedDate && cell.enabled) {
-        if (self.selectedDateRange.count < 2) {
+    if (self.selectedDate && cell.enabled)
+    {
+        if (self.selectedDateRange.count < 2)
+        {
             [cell setSelected:[date isEqualToDate:self.selectedDate]];
-            if (self.selectedDayBackgroundColor) {
+            if (self.selectedDayBackgroundColor)
+            {
                 [cell.selectedBackgroundView setBackgroundColor:self.selectedDayBackgroundColor];
             }
         }
@@ -402,7 +482,7 @@
             [cell setSelected:[NSDate date:date isBetweenDate:self.selectedDateRange[0] andDate:self.selectedDateRange[1]]];
         }
         
-        if ([date timeIntervalSinceDate:_selectedDateRange[0]] == 0) {
+        if ([date timeIntervalSinceDate:_selectedDateRange[0]] == 0){
             [cell.selectedBackgroundView setBackgroundColor:_beginDateBackgroundColor];
         }
         else if ([date timeIntervalSinceDate:_selectedDateRange[1]] == 0){
@@ -412,13 +492,15 @@
         
     }
     
-    if (!cell.backgroundView) {
+    if (!cell.backgroundView)
+    {
         cell.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, cell.frame.size.width-2, cell.frame.size.height-2)];
     }
     cell.backgroundView.backgroundColor = [UIColor clearColor];
     
     NSTimeInterval interval = [[NSDate date] timeIntervalSinceDate:date];
-    if (0 < interval && interval < MN_DAY && ![cell isOtherMonthDate]) {
+    if (0 < interval && interval < MN_DAY && ![cell isOtherMonthDate])
+    {
         NSDictionary *stringAttributes = @{ NSFontAttributeName : self.todayFont
                                             //,NSUnderlineStyleAttributeName: [NSNumber numberWithInt:NSUnderlineStyleSingle]
                                             };
@@ -430,24 +512,36 @@
     
     [cell hideIfOtherMonthDate];
     
-    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureDayCellForDate:)]) {
+    if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:configureDayCellForDate:)])
+    {
         [self.delegate calendarView:self configureDayCellForDate:cell];
     }
     
     return cell;
 }
 
+
+
 #pragma mark - UICollectionViewDelegate
 
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath {
+
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldHighlightItemAtIndexPath:(NSIndexPath *)indexPath
+{
     return [self canSelectItemAtIndexPath:indexPath];
 }
 
-- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+
+- (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     return [self canSelectItemAtIndexPath:indexPath];
 }
 
-- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
+
+
+- (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath
+{
     if (!_tapEnabled) {
         return;
     }
@@ -466,10 +560,10 @@
     }
 }
 
-- (CGSize)collectionView:(UICollectionView *)collectionView
-                  layout:(UICollectionViewLayout*)collectionViewLayout
-  sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
-    
+
+
+- (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath
+{
     CGFloat width      = self.bounds.size.width;
     CGFloat itemWidth  = roundf(width / self.daysInWeek);
     CGFloat itemHeight = indexPath.item < self.daysInWeek ? 30.f : itemWidth;
@@ -482,5 +576,7 @@
     
     return CGSizeMake(itemWidth, itemHeight);
 }
+
+
 
 @end
