@@ -552,8 +552,8 @@
         
         self.selectedDate = dayCell.date;
         
-        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectDate:)]) {
-            [self.delegate calendarView:self didSelectDate:dayCell.date];
+        if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectCell:forDate:)]) {
+            [self.delegate calendarView:self didSelectCell:dayCell forDate:dayCell.date];
         }
         
         [self.collectionView reloadData];
