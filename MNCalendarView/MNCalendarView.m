@@ -175,6 +175,7 @@
 - (void)setSelectedDate:(NSDate *)selectedDate
 {
     _selectedDate = [selectedDate mn_beginningOfDay:self.calendar];
+    [self.collectionView reloadData];
 }
 
 
@@ -494,7 +495,7 @@
     
     if (!cell.backgroundView)
     {
-        cell.backgroundView = [[UIView alloc] initWithFrame:CGRectMake(1, 1, cell.frame.size.width-2, cell.frame.size.height-2)];
+        cell.backgroundView = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 1.f, 1.f )];
     }
     cell.backgroundView.backgroundColor = [UIColor clearColor];
     
@@ -555,8 +556,6 @@
         if (self.delegate && [self.delegate respondsToSelector:@selector(calendarView:didSelectCell:forDate:)]) {
             [self.delegate calendarView:self didSelectCell:dayCell forDate:dayCell.date];
         }
-        
-        [self.collectionView reloadData];
     }
 }
 
