@@ -71,7 +71,7 @@
 
 @optional
 
-- (void)calendarView:(MNCalendarView *)calendarView configureDayCellForDate:(MNCalendarViewDayCell *)cell;
+- (void)calendarView:(MNCalendarView *)calendarView configureDayCell:(MNCalendarViewDayCell *)cell forDate:(NSDate *)date;
 - (BOOL)calendarView:(MNCalendarView *)calendarView shouldSelectDate:(NSDate *)date;
 - (void)calendarView:(MNCalendarView *)calendarView didSelectDate:(NSDate *)date;
 
