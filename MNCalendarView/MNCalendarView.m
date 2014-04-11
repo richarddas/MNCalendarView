@@ -495,7 +495,7 @@
     
     if (!cell.backgroundView)
     {
-        cell.backgroundView = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 1.f, 1.f )];
+        cell.backgroundView = [[UIView alloc] initWithFrame:CGRectInset(cell.frame, 2.f, 2.f )];
     }
     cell.backgroundView.backgroundColor = [UIColor clearColor];
     
@@ -508,7 +508,7 @@
         cell.titleLabel.attributedText = [[NSAttributedString alloc] initWithString:cell.titleLabel.text attributes:stringAttributes];
         cell.titleLabel.textColor      = [UIColor whiteColor];
         
-        cell.backgroundView.backgroundColor = self.todayBackgroundColor ? self.todayBackgroundColor : [UIColor colorWithRed:0.09 green:0.06 blue:0.21 alpha:1.0];
+        cell.backgroundView.backgroundColor = self.todayBackgroundColor ? self.todayBackgroundColor : [UIColor clearColor];
     }
     
     [cell hideIfOtherMonthDate];
